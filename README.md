@@ -19,13 +19,7 @@ Initial benchmark results for LLM Guard:
 | F1 Score | 56.94% |
 | Avg Detection Time | 0.099s |
 
-Confusion Matrix:
-- True Positives: 82
-- False Positives: 3
-- True Negatives: 340
-- False Negatives: 121
-
-These results suggest that LLM Guard has high precision but lower recall, meaning it rarely raises false alarms but misses some injection attempts. The detection speed is quite fast at under 0.1 seconds per prompt.
+These results suggest that LLM Guard has high precision but lower recall. The detection speed is quite fast at under 0.1 seconds per prompt.
 
 ## Installation
 
