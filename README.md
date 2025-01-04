@@ -7,6 +7,26 @@ This project provides a benchmarking framework for evaluating prompt injection d
 - Evaluates detection accuracy, precision, recall, and F1 score
 - Measures average detection time
 
+## Initial Results
+
+Initial benchmark results for LLM Guard:
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 77.29% |
+| Precision | 96.47% |
+| Recall | 40.39% |
+| F1 Score | 56.94% |
+| Avg Detection Time | 0.099s |
+
+Confusion Matrix:
+- True Positives: 82
+- False Positives: 3
+- True Negatives: 340
+- False Negatives: 121
+
+These results suggest that LLM Guard has high precision but lower recall, meaning it rarely raises false alarms but misses some injection attempts. The detection speed is quite fast at under 0.1 seconds per prompt.
+
 ## Installation
 
 1. Clone the repository

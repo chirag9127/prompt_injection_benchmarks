@@ -102,19 +102,24 @@ class PromptInjectionBenchmark:
 
     def save_results(self, results: Dict[str, BenchmarkResult], output_file: str):
         """Save benchmark results to a JSON file"""
+        def convert_to_python_types(obj):
+            if hasattr(obj, 'item'):  # Convert numpy types to Python native types
+                return obj.item()
+            return obj
+
         output = {
             "benchmark_date": datetime.now().isoformat(),
             "results": {
                 name: {
-                    "true_positives": result.true_positives,
-                    "false_positives": result.false_positives,
-                    "true_negatives": result.true_negatives,
-                    "false_negatives": result.false_negatives,
-                    "accuracy": result.accuracy,
-                    "precision": result.precision,
-                    "recall": result.recall,
-                    "f1_score": result.f1_score,
-                    "avg_detection_time": result.avg_detection_time
+                    "true_positives": convert_to_python_types(result.true_positives),
+                    "false_positives": convert_to_python_types(result.false_positives),
+                    "true_negatives": convert_to_python_types(result.true_negatives),
+                    "false_negatives": convert_to_python_types(result.false_negatives),
+                    "accuracy": convert_to_python_types(result.accuracy),
+                    "precision": convert_to_python_types(result.precision),
+                    "recall": convert_to_python_types(result.recall),
+                    "f1_score": convert_to_python_types(result.f1_score),
+                    "avg_detection_time": convert_to_python_types(result.avg_detection_time)
                 }
                 for name, result in results.items()
             }
