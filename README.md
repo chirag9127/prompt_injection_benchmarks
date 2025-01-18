@@ -37,3 +37,21 @@ These results suggest that LLM Guard has high precision but lower recall. The de
 2. Create a virtual environment (recommended)
 3. Install dependencies
 4. Run `python main.py`
+
+
+## Threshold Optimization
+
+The `threshold_optimization.py` script performs analysis to find optimal detection thresholds for both LLM Guard and Pytector. Key functionality includes:
+
+- Tests 30 different threshold values from 0.0 to 1.0
+- Evaluates precision, recall and F1 score at each threshold
+- Generates visualization plots:
+  - Precision-Recall curves with AUC scores
+  - Metrics vs threshold plots showing precision, recall and F1 trade-offs
+- Automatically determines optimal threshold values that maximize F1 score
+- Outputs detailed metrics at the optimal threshold points
+
+The analysis helps balance the trade-off between false positives and false negatives by finding threshold values that optimize overall detection performance. The precision-recall curves provide insight into detector performance across the full range of possible thresholds.
+
+Based on this analysis, we selected a threshold of 0.034 for both detectors as it provided the best balance of precision and recall on the benchmark dataset.
+
