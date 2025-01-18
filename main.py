@@ -15,6 +15,7 @@ load_dotenv()
 
 # Import detection libraries
 from llm_guard.input_scanners.prompt_injection import PromptInjection as LLMGuardScanner
+from pytector import PromptInjectionDetector
 
 
 @dataclass
@@ -33,7 +34,8 @@ class BenchmarkResult:
 class PromptInjectionBenchmark:
     def __init__(self):
         # Initialize detection libraries
-        self.llm_guard = LLMGuardScanner()
+        self.llm_guard = LLMGuardScanner(threshold=0.034)
+        self.pytector = PromptInjectionDetector(model_name_or_url="deberta", default_threshold=0.034)
         
         # Load dataset
         self.dataset = load_dataset("deepset/prompt-injections", split="train")
@@ -79,19 +81,39 @@ class PromptInjectionBenchmark:
             "detection_time": detection_time
         }
 
+    def run_pytector(self, prompt: str) -> Dict[str, Any]:
+        start_time = time.time()
+        try:
+            is_injection, _ = self.pytector.detect_injection(prompt)
+        except Exception as e:
+            print(f"Pytector error: {str(e)}")
+            is_injection = False
+        detection_time = time.time() - start_time
+        
+        return {
+            "library": "Pytector",
+            "predicted": is_injection,
+            "detection_time": detection_time
+        }
+
     def run_benchmark(self) -> Dict[str, BenchmarkResult]:
         results = {
-            "LLM Guard": []
+            "LLM Guard": [],
+            "Pytector": []
         }
         
         for example in tqdm(self.dataset, desc="Running benchmark"):
             prompt = example['text']
             is_injection = example['label'] == 1
             
-            # Run detector
+            # Run detectors
             llm_guard_result = self.run_llm_guard(prompt)
             llm_guard_result['actual'] = is_injection
             results["LLM Guard"].append(llm_guard_result)
+
+            pytector_result = self.run_pytector(prompt)
+            pytector_result['actual'] = is_injection
+            results["Pytector"].append(pytector_result)
         
         # Calculate metrics for each library
         benchmark_results = {}
